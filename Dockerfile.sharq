@@ -1,0 +1,16 @@
+FROM python:2.7
+
+RUN apt-get update && apt-get install -qy python-pip
+
+RUN pip install sharqserver
+RUN pip uninstall gevent -y && pip install gevent
+
+RUN mkdir -p $GOPATH/src/github.com/plivo/sharq-server
+
+ADD . $GOPATH/src/github.com/plivo/sharq-server
+
+WORKDIR $GOPATH/src/github.com/plivo/sharq-server
+
+ADD sharq.conf /etc
+
+CMD ["sh", "-c", "sharq-server --config /etc/sharq.conf"]
